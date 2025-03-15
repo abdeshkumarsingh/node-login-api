@@ -1,0 +1,46 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# If the request is for a valid directory
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+# If the request is for a valid file
+RewriteCond %{REQUEST_FILENAME} -f
+# Then skip the rewrite
+RewriteRule ^ - [L]
+
+# For proxying to Node.js server
+# This assumes your Node.js app is running on port 3000
+# Specific to your cPanel setup - may need adjustment
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+
+# Handle proxy errors
+ErrorDocument 500 "Proxy Error. Please check the Node.js application status."
+ErrorDocument 502 "Bad Gateway. The Node.js application may be down."
+ErrorDocument 503 "Service Unavailable. The Node.js application is not responding."
+ErrorDocument 504 "Gateway Timeout. The Node.js application took too long to respond."
+
+# Security headers
+<IfModule mod_headers.c>
+  # Disable MIME type sniffing
+  Header set X-Content-Type-Options "nosniff"
+  
+  # Enable XSS filtering
+  Header set X-XSS-Protection "1; mode=block"
+  
+  # Prevent clickjacking
+  Header set X-Frame-Options "SAMEORIGIN"
+  
+  # CORS settings - adjust as needed
+  Header set Access-Control-Allow-Origin "*"
+  Header set Access-Control-Allow-Methods "GET, POST, PATCH, DELETE, OPTIONS"
+  Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+</IfModule>
+
+# Prevent .env file from being accessed
+<Files ~ "^\.env">
+  Order allow,deny
+  Deny from all
+</Files>
+
+# Disable directory listing
+Options -Indexes 
