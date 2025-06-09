@@ -44,6 +44,12 @@ app.use('*', (req, res) => {
   });
 });
 
+// Test route
+app.get('/', (req, res) => {
+  res.send('API root is working!');
+});
+
+
 // Set up port
 const PORT = process.env.PORT || 3000;
 
