@@ -11,7 +11,9 @@ router.get('/health', (req, res) => {
   });
 });
 
+
 // Mount routes
 router.use('/users', userRoutes);
+
 
 module.exports = router; 

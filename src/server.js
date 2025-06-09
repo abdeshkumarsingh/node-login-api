@@ -25,6 +25,11 @@ app.use(morgan('dev'));
 // API version routes
 app.use('/v1', v1Routes);
 
+// Test route
+app.get('/', (req, res) => {
+  res.send('API root is working!');
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -42,11 +47,6 @@ app.use('*', (req, res) => {
     status: 'error',
     message: `Cannot find ${req.originalUrl} on this server!`,
   });
-});
-
-// Test route
-app.get('/', (req, res) => {
-  res.send('API root is working!');
 });
 
 
